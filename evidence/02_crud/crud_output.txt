@@ -1,0 +1,122 @@
+Consistency level set to LOCAL_QUORUM.
+
+ step
+------------------------------------------------
+ --- STEP 1 CREATE: insert one registration ---
+
+(1 rows)
+
+ event_id  | seat_no | attendee | email             | registered_at
+-----------+---------+----------+-------------------+---------------------------------
+ CRUD-DEMO |       1 |    Alice | alice@example.org | 2026-11-01 10:00:00.000000+0000
+
+(1 rows)
+
+ step
+------------------------------------------------
+ --- STEP 2 READ: all rows of one partition ---
+
+(1 rows)
+
+ event_id  | seat_no | attendee | email             | registered_at
+-----------+---------+----------+-------------------+---------------------------------
+ CRUD-DEMO |       1 |    Alice | alice@example.org | 2026-11-01 10:00:00.000000+0000
+ CRUD-DEMO |       2 |      Bob |   bob@example.org | 2026-11-01 10:05:00.000000+0000
+
+(2 rows)
+
+ step
+----------------------------------------------------
+ --- STEP 3 UPDATE: change the e-mail of seat 1 ---
+
+(1 rows)
+
+ event_id  | seat_no | attendee | email                 | registered_at
+-----------+---------+----------+-----------------------+---------------------------------
+ CRUD-DEMO |       1 |    Alice | alice.new@example.org | 2026-11-01 10:00:00.000000+0000
+
+(1 rows)
+
+ step
+----------------------------------------------------------------
+ --- STEP 4 UPSERT: INSERT on an existing key overwrites it ---
+
+(1 rows)
+
+ event_id  | seat_no | attendee | email                 | registered_at
+-----------+---------+----------+-----------------------+---------------------------------
+ CRUD-DEMO |       1 |    Carol | alice.new@example.org | 2026-11-01 10:00:00.000000+0000
+
+(1 rows)
+
+ step
+----------------------------------------------------------------
+ --- STEP 5 UPSERT: UPDATE on a missing key creates the row ---
+
+(1 rows)
+
+ event_id  | seat_no | attendee | email                 | registered_at
+-----------+---------+----------+-----------------------+---------------------------------
+ CRUD-DEMO |       1 |    Carol | alice.new@example.org | 2026-11-01 10:00:00.000000+0000
+ CRUD-DEMO |       2 |      Bob |       bob@example.org | 2026-11-01 10:05:00.000000+0000
+ CRUD-DEMO |       3 |     Dave |                  null |                            null
+
+(3 rows)
+
+ step
+--------------------------------------
+ --- STEP 6 DELETE: remove seat 2 ---
+
+(1 rows)
+
+ event_id  | seat_no | attendee | email                 | registered_at
+-----------+---------+----------+-----------------------+---------------------------------
+ CRUD-DEMO |       1 |    Carol | alice.new@example.org | 2026-11-01 10:00:00.000000+0000
+ CRUD-DEMO |       3 |     Dave |                  null |                            null
+
+(2 rows)
+
+ step
+----------------------------------------------------------
+ --- STEP 7 USEFUL QUERIES beyond a single-row lookup ---
+
+(1 rows)
+
+ seat_no | attendee
+---------+-----------------
+       5 | attendee_E1_005
+       6 | attendee_E1_006
+       7 | attendee_E1_007
+       8 | attendee_E1_008
+       9 | attendee_E1_009
+      10 | attendee_E1_010
+
+(6 rows)
+
+ seat_no | attendee
+---------+-----------------
+      30 | attendee_E1_030
+      29 | attendee_E1_029
+      28 | attendee_E1_028
+      27 | attendee_E1_027
+      26 | attendee_E1_026
+
+(5 rows)
+
+ count
+-------
+    30
+
+(1 rows)
+
+ step
+-----------------
+ --- CLEANUP ---
+
+(1 rows)
+
+ count
+-------
+     0
+
+(1 rows)
