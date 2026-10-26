@@ -1,0 +1,51 @@
+x-cassandra: &cassandra
+  image: cassandra:5.0.9 
+  networks: [cassnet] 
+  mem_limit: 1200m 
+  restart: "no" 
+  environment:
+    CASSANDRA_CLUSTER_NAME: nosql-lab 
+    CASSANDRA_DC: dc1
+    CASSANDRA_RACK: rack1
+    CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch 
+    CASSANDRA_SEEDS: cass1
+    MAX_HEAP_SIZE: 512M 
+    HEAP_NEWSIZE: 128M
+  healthcheck:
+    test: ["CMD-SHELL", "cqlsh -e 'SELECT release_version FROM system.local' > /dev/null 2>&1"] 
+    interval: 20s 
+    timeout: 15s 
+    retries: 30 
+    start_period: 60s
+
+services: 
+  cass1:
+    <<: *cassandra 
+    container_name: cass1 
+    hostname: cass1
+    ports: ["127.0.0.1:9042:9042"]
+    volumes: [cass1_data:/var/lib/cassandra] 
+
+  cass2:
+    <<: *cassandra 
+    container_name: cass2 
+    hostname: cass2 
+    depends_on:
+      cass1: {condition: service_healthy} 
+    volumes: [cass2_data:/var/lib/cassandra]
+
+  cass3:
+    <<: *cassandra 
+    container_name: cass3 
+    hostname: cass3 
+    depends_on:
+      cass2: {condition: service_healthy}
+    volumes: [cass3_data:/var/lib/cassandra]
+
+networks: 
+  cassnet: {}
+
+volumes: 
+  cass1_data: {} 
+  cass2_data: {} 
+  cass3_data: {}

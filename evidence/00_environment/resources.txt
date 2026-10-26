@@ -1,0 +1,8 @@
+## nodetool version
+ReleaseVersion: 5.0.9
+
+## image digest
+cassandra@sha256:3ea9333712c5692f3fe91d6c4dcc262df9e36338c4fdd1bc00a5e53f1137a1a0
+
+## cqlsh version
+[cqlsh 6.2.0 | Cassandra 5.0.9 | CQL spec 3.4.7 | Native protocol v5]
