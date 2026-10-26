@@ -1,0 +1,10 @@
+Datacenter: dc1
+===============
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address     Load        Tokens  Owns  Host ID                               Rack 
+UN  172.18.0.3  103.84 KiB  16      ?     0bb55f4f-fb8d-4369-84b3-4e9189350bb5  rack1
+DN  172.18.0.4  98.77 KiB   16      ?     a0789aa8-f927-4faa-ac02-3ed4eec0aeee  rack1
+UN  172.18.0.2  102 KiB     16      ?     7f0f9554-efd3-4615-9653-33bda496f6c3  rack1
+
+Note: Non-system keyspaces don't have the same replication settings, effective ownership information is meaningless

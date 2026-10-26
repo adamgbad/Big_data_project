@@ -1,0 +1,19 @@
+Consistency level set to ALL.
+
+ step
+----------------------------------------------------------
+ --- B3: read and write at CL ALL after node restored ---
+
+(1 rows)
+
+ event_id | seat_no | attendee
+----------+---------+----------------
+   B-TEST |       1 | during_failure
+
+(1 rows)
+
+ event_id | seat_no | attendee
+----------+---------+----------------
+   B-TEST |       1 | after_recovery
+
+(1 rows)

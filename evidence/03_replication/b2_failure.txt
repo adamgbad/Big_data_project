@@ -1,0 +1,39 @@
+Consistency level set to LOCAL_QUORUM.
+
+ step
+-----------------------------------------------
+ --- B2a: LOCAL_QUORUM read, one node down ---
+
+(1 rows)
+
+ event_id | seat_no | attendee
+----------+---------+----------------
+   B-TEST |       1 | during_failure
+
+(1 rows)
+
+ step
+------------------------------------------------
+ --- B2b: LOCAL_QUORUM write, one node down ---
+
+(1 rows)
+
+ step
+-------------------------------------
+ --- B2c: LOCAL_QUORUM read back ---
+
+(1 rows)
+
+ event_id | seat_no | attendee
+----------+---------+----------------
+   B-TEST |       1 | during_failure
+
+(1 rows)
+Consistency level set to ALL.
+
+ step
+---------------------------------------------------------
+ --- B2d: ALL read, one node down (expected to FAIL) ---
+
+(1 rows)
+<stdin>:18:NoHostAvailable: ('Unable to complete the operation against any hosts', {<Host: 127.0.0.1:9042 dc1>: Unavailable('Error from server: code=1000 [Unavailable exception] message="Cannot achieve consistency level ALL" info={\'consistency\': \'ALL\', \'required_replicas\': 3, \'alive_replicas\': 2}')})
