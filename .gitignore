@@ -1,0 +1,26 @@
+# Environment and secrets
+.env
+*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Cassandra local logs/data dumps (if any generated outside docker volumes)
+*.log
+data/
