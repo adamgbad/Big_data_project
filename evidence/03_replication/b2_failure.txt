@@ -8,7 +8,7 @@ Consistency level set to LOCAL_QUORUM.
 
  event_id | seat_no | attendee
 ----------+---------+----------------
-   B-TEST |       1 | during_failure
+   B-TEST |       1 | before_failure
 
 (1 rows)
 

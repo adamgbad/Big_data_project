@@ -1,0 +1,22 @@
+## GOOD design: WHERE event_id = 'E1'
+
+ event_id | seat_no | attendee
+----------+---------+-----------------
+       E1 |       1 | attendee_E1_001
+       E1 |       2 | attendee_E1_002
+       E1 |       3 | attendee_E1_003
+       E1 |       4 | attendee_E1_004
+       E1 |       5 | attendee_E1_005
+
+(5 rows)
+## BAD design: WHERE bucket = 'all' AND event_id = 'E1'
+
+ event_id | seat_no | attendee
+----------+---------+-----------------
+       E1 |       1 | attendee_E1_001
+       E1 |       2 | attendee_E1_002
+       E1 |       3 | attendee_E1_003
+       E1 |       4 | attendee_E1_004
+       E1 |       5 | attendee_E1_005
+
+(5 rows)

@@ -1,0 +1,7 @@
+## SELECT through cass3:
+
+ id | v
+----+-------
+  1 | hello
+
+(1 rows)

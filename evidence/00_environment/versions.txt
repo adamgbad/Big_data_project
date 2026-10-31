@@ -1,0 +1,12 @@
+## host
+Docker version 29.2.1, build a5c7197
+Docker Compose version v5.0.2
+
+## nodetool version
+ReleaseVersion: 5.0.9
+
+## image digest
+cassandra@sha256:ae4cc2e4b62a5b2a2dd1645ba827cb50c589cc7531bcffe8b8b60ac3b1adc79d
+
+## cqlsh version
+[cqlsh 6.2.0 | Cassandra 5.0.9 | CQL spec 3.4.7 | Native protocol v5]

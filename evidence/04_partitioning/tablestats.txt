@@ -1,0 +1,21 @@
+== cass1 ==
+-- registrations_good
+		Space used (live): 6488
+		Number of partitions (estimate): 3
+-- registrations_bad
+		Space used (live): 6792
+		Number of partitions (estimate): 1
+== cass2 ==
+-- registrations_good
+		Space used (live): 6277
+		Number of partitions (estimate): 3
+-- registrations_bad
+		Space used (live): 0
+		Number of partitions (estimate): 0
+== cass3 ==
+-- registrations_good
+		Space used (live): 0
+		Number of partitions (estimate): 0
+-- registrations_bad
+		Space used (live): 0
+		Number of partitions (estimate): 0

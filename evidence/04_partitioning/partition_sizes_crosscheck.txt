@@ -1,0 +1,1 @@
+distinct primary keys per partition (from seed file): {'E1': 30, 'E2': 20, 'E3': 15, 'E4': 25, 'E5': 10, 'E6': 20} total 120

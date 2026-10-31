@@ -1,0 +1,50 @@
+## docker compose ps
+NAME      IMAGE             COMMAND                   SERVICE   CREATED         STATUS                   PORTS
+cass1     cassandra:5.0.9   "docker-entrypoint.s…"   cass1     4 minutes ago   Up 4 minutes (healthy)   127.0.0.1:9042->9042/tcp
+cass2     cassandra:5.0.9   "docker-entrypoint.s…"   cass2     4 minutes ago   Up 3 minutes (healthy)   7000-7001/tcp, 7199/tcp, 9042/tcp, 9160/tcp
+cass3     cassandra:5.0.9   "docker-entrypoint.s…"   cass3     4 minutes ago   Up 2 minutes (healthy)   7000-7001/tcp, 7199/tcp, 9042/tcp, 9160/tcp
+
+## nodetool status
+Datacenter: dc1
+===============
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address     Load        Tokens  Owns  Host ID                               Rack 
+UN  172.19.0.4  114.62 KiB  16      ?     8bea8dc2-9532-4767-bdca-b2444250f863  rack1
+UN  172.19.0.2  102.02 KiB  16      ?     292f2495-b823-45b6-81e0-5125cd67dd70  rack1
+UN  172.19.0.3  103.82 KiB  16      ?     4c31ef9d-177a-43c4-945b-e00d69a47975  rack1
+
+Note: Non-system keyspaces don't have the same replication settings, effective ownership information is meaningless
+
+## nodetool describecluster
+Cluster Information:
+	Name: nosql-lab
+	Snitch: org.apache.cassandra.locator.GossipingPropertyFileSnitch
+	DynamicEndPointSnitch: enabled
+	Partitioner: org.apache.cassandra.dht.Murmur3Partitioner
+	Schema versions:
+		83018f0f-7524-3135-be49-f0f18ca63624: [172.19.0.3, 172.19.0.2, 172.19.0.4]
+
+Stats for all nodes:
+	Live: 3
+	Joining: 0
+	Moving: 0
+	Leaving: 0
+	Unreachable: 0
+
+Data Centers: 
+	dc1 #Nodes: 3 #Down: 0
+
+Database versions:
+	5.0.9: [172.19.0.3:7000, 172.19.0.2:7000, 172.19.0.4:7000]
+
+Keyspaces:
+	system_traces -> Replication class: SimpleStrategy {replication_factor=2}
+	system_distributed -> Replication class: SimpleStrategy {replication_factor=3}
+	system_auth -> Replication class: SimpleStrategy {replication_factor=1}
+	nosql_rf3 -> Replication class: NetworkTopologyStrategy {dc1=3}
+	nosql_rf1 -> Replication class: NetworkTopologyStrategy {dc1=1}
+	system_schema -> Replication class: LocalStrategy {}
+	system -> Replication class: LocalStrategy {}
+
+Note: Non-system keyspaces don't have the same replication settings, effective ownership information is meaningless

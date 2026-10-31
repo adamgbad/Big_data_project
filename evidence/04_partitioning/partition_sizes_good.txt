@@ -1,0 +1,15 @@
+
+ event_id | count
+----------+-------
+       E1 |    30
+       E3 |    15
+       E5 |    10
+       E6 |    20
+       E2 |    20
+       E4 |    25
+
+(6 rows)
+
+Warnings :
+Aggregation query used without partition key
+

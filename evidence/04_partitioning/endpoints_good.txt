@@ -1,0 +1,6 @@
+registrations_good key=E1 -> 172.19.0.2
+registrations_good key=E2 -> 172.19.0.3
+registrations_good key=E3 -> 172.19.0.2
+registrations_good key=E4 -> 172.19.0.3
+registrations_good key=E5 -> 172.19.0.3
+registrations_good key=E6 -> 172.19.0.2

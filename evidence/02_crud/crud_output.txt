@@ -38,8 +38,8 @@ Consistency level set to LOCAL_QUORUM.
 (1 rows)
 
  step
-----------------------------------------------------------------
- --- STEP 4 UPSERT: INSERT on an existing key overwrites it ---
+-------------------------------------------------------------------------------------
+ --- STEP 4 UPSERT: INSERT on an existing key overwrites only the listed columns ---
 
 (1 rows)
 

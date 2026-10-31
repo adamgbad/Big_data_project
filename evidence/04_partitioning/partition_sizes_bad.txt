@@ -1,0 +1,10 @@
+
+ bucket | count
+--------+-------
+    all |   120
+
+(1 rows)
+
+Warnings :
+Aggregation query used without partition key
+

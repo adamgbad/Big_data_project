@@ -1,0 +1,13 @@
+Consistency level set to LOCAL_QUORUM.
+
+ step
+--------------------------------------------
+ --- D final state (read through cass3) ---
+
+(1 rows)
+
+ event_id             | seat_no | owner
+----------------------+---------+-------
+ demo-race-1793483848 |       1 | Alice
+
+(1 rows)

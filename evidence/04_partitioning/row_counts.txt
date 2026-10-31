@@ -1,0 +1,21 @@
+## total rows
+
+ count
+-------
+   120
+
+(1 rows)
+
+Warnings :
+Aggregation query used without partition key
+
+
+ count
+-------
+   120
+
+(1 rows)
+
+Warnings :
+Aggregation query used without partition key
+

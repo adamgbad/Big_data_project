@@ -1,0 +1,14 @@
+Consistency level set to LOCAL_QUORUM.
+Serial consistency level set to LOCAL_SERIAL.
+Current consistency level is LOCAL_QUORUM.
+Current serial consistency level is LOCAL_SERIAL.
+
+ step
+---------------------------------------------------------
+ --- D client B (cass2): claim the same seat for Bob ---
+
+(1 rows)
+
+ [applied] | event_id            | seat_no | owner
+-----------+---------------------+---------+-------
+     False | demo-run-1793483848 |       1 | Alice

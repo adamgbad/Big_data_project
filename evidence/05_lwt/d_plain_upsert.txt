@@ -1,0 +1,19 @@
+Consistency level set to LOCAL_QUORUM.
+
+ step
+-------------------------------
+ --- Plain INSERT by Alice ---
+
+(1 rows)
+
+ step
+-------------------------------------------------------------
+ --- Plain INSERT by Bob (no error, silently overwrites) ---
+
+(1 rows)
+
+ event_id              | seat_no | owner
+-----------------------+---------+-------
+ demo-plain-1793483848 |       1 |   Bob
+
+(1 rows)

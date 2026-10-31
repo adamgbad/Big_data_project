@@ -15,7 +15,7 @@ UPDATE nosql_rf3.registrations SET email = 'alice.new@example.org'
 WHERE event_id = 'CRUD-DEMO' AND seat_no = 1;
 SELECT * FROM nosql_rf3.registrations WHERE event_id = 'CRUD-DEMO' AND seat_no = 1;
 
-SELECT (text)'--- STEP 4 UPSERT: INSERT on an existing key overwrites it ---' AS step FROM system.local;
+SELECT (text)'--- STEP 4 UPSERT: INSERT on an existing key overwrites only the listed columns ---' AS step FROM system.local;
 INSERT INTO nosql_rf3.registrations (event_id, seat_no, attendee) 
 VALUES ('CRUD-DEMO', 1, 'Carol');
 SELECT * FROM nosql_rf3.registrations WHERE event_id = 'CRUD-DEMO' AND seat_no = 1;
