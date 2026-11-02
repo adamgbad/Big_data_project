@@ -139,7 +139,7 @@ Documentations/         task guide and assignment notes
 | Member | What they did | Evidence |
 |---|---|---|
 | Ádám Guba | Repository set-up and first working version of the project: 3-node Docker Compose cluster (pinned 5.0.9 image, healthchecks, memory settings), version and image digest record, schema, data generator and seed files, CRUD script and its output, first version of `reset.sh`, first run of the replication experiment (B). Part 1 introduction slides and recording | `config/docker-compose.yml`, `.env.example`, `.gitignore`, `scripts/00_schema.cql`, `scripts/generate_data.py`, `scripts/seed_*.cql`, `scripts/crud.cql`, `scripts/b1_seed.cql`, `scripts/b2_failure.cql`, `scripts/b3_recovery.cql`, `evidence/02_crud/crud_output.txt`, slides 1–8 |
-| Sun Thong | Draft versions of the data generator and the CRUD script | — |
+| Sun Thong | Draft versions of the data generator and the CRUD script | `crud.cql`, `generate_data.py` |
 | Chen Yuqi | Project task guide (work split, step-by-step guides for every experiment); completed `reset.sh` (data-deletion warning, wait loop, re-seeding); environment check script; experiments C (partitioning) and D (lightweight transactions); CRUD run results and ALLOW FILTERING evidence; `notes.md` for every experiment; screenshots; README; slides for Parts 2–6 | `Documentations/Cassandra Group Project Task Guide.md`, `scripts/reset.sh`, `scripts/env_check.sh`, `evidence/00_environment/`, `scripts/c_partitioning.sh`, `scripts/d_*.cql`, `scripts/d_lwt.sh`, `scripts/crud_run.sh`, `evidence/02_crud/`, `evidence/04_partitioning/`, `evidence/05_lwt/`, `evidence/*/notes.md`, `evidence/screenshots/`, `README.md`, `slides/Cassandra_Full_Presentation.pptx` (slides 9–27) |
 
 ## 9. Sources
