@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-# Part 4: CRUD demonstration + what Cassandra refuses (Guide 2, steps 2.4-2.5).
 set -uo pipefail
 cd "$(dirname "$0")/.."
 export MSYS_NO_PATHCONV=1

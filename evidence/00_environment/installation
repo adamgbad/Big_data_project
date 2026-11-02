@@ -1,0 +1,313 @@
+Step 1.1: Check computer
+docker --version 
+docker compose version
+docker info --format '{{.MemTotal}}'
+
+------------------------
+
+Step 1.2: Create the repository skeleton
+mkdir -p cassandra-project/{slides,config,scripts,evidence} 
+cd cassandra-project
+git init
+
+-----------------------
+
+Step 1.3: Write config/docker-compose.yml
+
+x-cassandra: &cassandra
+  image: cassandra:5.0.9 
+  networks: [cassnet] 
+  mem_limit: 2560m 
+  restart: "no" 
+  environment:
+    CASSANDRA_CLUSTER_NAME: nosql-lab 
+    CASSANDRA_DC: dc1
+    CASSANDRA_RACK: rack1
+    CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch 
+    CASSANDRA_SEEDS: cass1
+    MAX_HEAP_SIZE: 1G 
+    HEAP_NEWSIZE: 256M
+  healthcheck:
+    test: ["CMD-SHELL", "cqlsh -e 'SELECT release_version FROM system.local' > /dev/null 2>&1"] 
+    interval: 20s 
+    timeout: 15s 
+    retries: 30 
+    start_period: 60s
+
+services: 
+  cass1:
+    <<: *cassandra 
+    container_name: cass1 
+    hostname: cass1
+    ports: ["127.0.0.1:9042:9042"]
+    volumes: [cass1_data:/var/lib/cassandra] 
+
+  cass2:
+    <<: *cassandra 
+    container_name: cass2 
+    hostname: cass2 
+    depends_on:
+      cass1: {condition: service_healthy} 
+    volumes: [cass2_data:/var/lib/cassandra]
+
+  cass3:
+    <<: *cassandra 
+    container_name: cass3 
+    hostname: cass3 
+    depends_on:
+      cass2: {condition: service_healthy}
+    volumes: [cass3_data:/var/lib/cassandra]
+
+networks: 
+  cassnet: {}
+
+volumes: 
+  cass1_data: {} 
+  cass2_data: {} 
+  cass3_data: {}
+
+-----------------------
+
+Step 1.4: Start the Cluster
+
+docker compose -f config/docker-compose.yml up -d 
+
+[+] Running 0/0
+[+] Running 11/3                                                                                             0.1s 
+ ✔ cass2 Pulled                                                                                             18.5s 
+ ✔ cass1 Pulled                                                                                             18.5s 
+ ✔ cass3 Pulled                                                                                             18.5s 
+[+] Running 6/6
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 6/7ig_cassnet      Created                                                                       0.2s 
+[+] Running 7/7ig_cassnet      Created                                                                       0.2s 
+ ✔ Network config_cassnet      Created                                                                       0.2s 
+ ✔ Volume "config_cass1_data"  Created                                                                       0.0s 
+ ✔ Volume "config_cass2_data"  Created                                                                       0.0s 
+ ✔ Volume "config_cass3_data"  Created                                                                       0.0s 
+ ✘ Container cass1             Error                                                                         3.8s 
+ ✔ Container cass2             Created                                                                       0.1s 
+ ✔ Container cass3             Created                                                                       0.2s 
+
+
+docker compose -f config/docker-compose.yml up -d
+
+[+] Running 3/3
+ ✔ Container cass1  Healthy                                                                                  5.5s 
+ ✔ Container cass2  Healthy                                                                                 31.6s 
+ ✔ Container cass3  Started     
+
+
+docker compose -f config/docker-compose.yml ps   
+
+NAME      IMAGE             COMMAND                  SERVICE   CREATED          STATUS                            
+ PORTS
+cass1     cassandra:5.0.9   "docker-entrypoint.s…"   cass1     14 minutes ago   Up About a minute (healthy)        7000-7001/tcp, 7199/tcp, 9160/tcp, 127.0.0.1:9042->9042/tcp
+cass2     cassandra:5.0.9   "docker-entrypoint.s…"   cass2     14 minutes ago   Up 45 seconds (healthy)           
+ 7000-7001/tcp, 7199/tcp, 9042/tcp, 9160/tcp
+cass3     cassandra:5.0.9   "docker-entrypoint.s…"   cass3     14 minutes ago   Up 19 seconds (health: starting)   7000-7001/tcp, 7199/tcp, 9042/tcp, 9160/tcp
+
+
+docker logs --tail 20 cass1
+
+INFO  [GossipStage:1] 2026-10-26T17:23:39,931 TokenMetadata.java:533 - Updating topology for /172.18.0.3:7000
+INFO  [GossipStage:1] 2026-10-26T17:23:39,935 TokenMetadata.java:533 - Updating topology for /172.18.0.3:7000
+INFO  [GossipStage:1] 2026-10-26T17:23:39,952 Gossiper.java:1492 - InetAddress /172.18.0.3:7000 is now UP
+INFO  [Messaging-EventLoop-3-1] 2026-10-26T17:23:40,344 OutboundConnection.java:1153 - /172.18.0.2:7000(/172.18.0.2:41872)->/172.18.0.3:7000-SMALL_MESSAGES-60a7231e successfully connected, version = 12, framing = CRC, encryption = unencrypted
+INFO  [Messaging-EventLoop-3-4] 2026-10-26T17:23:40,376 InboundConnectionInitiator.java:510 - /172.18.0.3:7000(/172.18.0.3:46418)->/172.18.0.2:7000-SMALL_MESSAGES-ad88b646 messaging connection established, version = 12, framing = CRC, encryption = unencrypted
+WARN  [GossipTasks:1] 2026-10-26T17:23:40,881 FailureDetector.java:347 - Not marking nodes down due to local pause of 74429392527ns > 5000000000ns
+INFO  [Messaging-EventLoop-3-1] 2026-10-26T17:23:47,937 InboundConnectionInitiator.java:510 - /172.18.0.3:7000(/172.18.0.3:46424)->/172.18.0.2:7000-LARGE_MESSAGES-a3121305 messaging connection established, version = 12, framing = CRC, encryption = unencrypted
+INFO  [Messaging-EventLoop-3-2] 2026-10-26T17:23:47,967 OutboundConnection.java:1153 - /172.18.0.2:7000(/172.18.0.2:41874)->/172.18.0.3:7000-LARGE_MESSAGES-3684d10d successfully connected, version = 12, framing = CRC, encryption = unencrypted
+INFO  [Messaging-EventLoop-3-2] 2026-10-26T17:24:04,047 InboundConnectionInitiator.java:510 - /172.18.0.4:7000(/172.18.0.4:36498)->/172.18.0.2:7000-URGENT_MESSAGES-dff6afac messaging connection established, version = 12, framing = CRC, encryption = unencrypted
+INFO  [Messaging-EventLoop-3-2] 2026-10-26T17:24:04,339 OutboundConnection.java:1153 - /172.18.0.2:7000(/172.18.0.2:58790)->/172.18.0.4:7000-URGENT_MESSAGES-7526492b successfully connected, version = 12, framing = CRC, encryption = unencrypted
+INFO  [GossipStage:1] 2026-10-26T17:24:05,982 FailureDetector.java:505 - Overriding cassandra.fd_max_interval_ms from 2000000000ms to 2000ms
+INFO  [GossipStage:1] 2026-10-26T17:24:05,983 Gossiper.java:1546 - Node /172.18.0.4:7000 has restarted, now UP    
+INFO  [GossipStage:1] 2026-10-26T17:24:05,989 TokenMetadata.java:533 - Updating topology for /172.18.0.4:7000     
+INFO  [GossipStage:1] 2026-10-26T17:24:05,994 TokenMetadata.java:533 - Updating topology for /172.18.0.4:7000     
+INFO  [GossipStage:1] 2026-10-26T17:24:06,012 Gossiper.java:1492 - InetAddress /172.18.0.4:7000 is now UP
+INFO  [GossipStage:1] 2026-10-26T17:24:06,288 StorageService.java:3320 - Node /172.18.0.4:7000 state jump to NORMAL
+INFO  [Messaging-EventLoop-3-3] 2026-10-26T17:24:13,742 InboundConnectionInitiator.java:510 - /172.18.0.4:7000(/172.18.0.4:45860)->/172.18.0.2:7000-SMALL_MESSAGES-8bbf0e53 messaging connection established, version = 12, framing = CRC, encryption = unencrypted
+INFO  [Messaging-EventLoop-3-4] 2026-10-26T17:24:13,744 InboundConnectionInitiator.java:510 - /172.18.0.4:7000(/172.18.0.4:45872)->/172.18.0.2:7000-LARGE_MESSAGES-c2128a9b messaging connection established, version = 12, framing = CRC, encryption = unencrypted
+INFO  [Messaging-EventLoop-3-1] 2026-10-26T17:24:13,764 OutboundConnection.java:1153 - /172.18.0.2:7000(/172.18.0.2:41026)->/172.18.0.4:7000-LARGE_MESSAGES-eefcf123 successfully connected, version = 12, framing = CRC, encryption = unencrypted
+INFO  [Messaging-EventLoop-3-4] 2026-10-26T17:24:13,769 OutboundConnection.java:1153 - /172.18.0.2:7000(/172.18.0.2:41014)->/172.18.0.4:7000-SMALL_MESSAGES-0d63fb5d successfully connected, version = 12, framing = CRC, encryption = unencrypted
+
+
+----------------------------
+
+Step 1.5: Verify the topology
+
+docker exec cass1 nodetool status
+
+Datacenter: dc1
+===============
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address     Load        Tokens  Owns (effective)  Host ID                               Rack 
+UN  172.18.0.3  120.4 KiB   16      59.3%             842f7477-234e-41ac-8e3f-305a5f72bede  rack1
+UN  172.18.0.4  115.52 KiB  16      76.0%             0a3a33d3-2454-431e-8835-df1e09364ea8  rack1
+UN  172.18.0.2  148.72 KiB  16      64.7%             90e79206-1ddd-4217-bc5f-b4fbb43da191  rack1
+
+---------------------------------------
+
+Step 1.6: Record versions and the image digest
+
+docker exec cass1 nodetool version
+ReleaseVersion: 5.0.9
+
+docker image inspect cassandra:5.0.9 --format '{{(index .RepoDigests 0)}}'
+cassandra@sha256:3ea9333712c5692f3fe91d6c4dcc262df9e36338c4fdd1bc00a5e53f1137a1a0
+
+docker exec cass1 cqlsh -e 'SHOW VERSION'
+[cqlsh 6.2.0 | Cassandra 5.0.9 | CQL spec 3.4.7 | Native protocol v5]
+
+-------------------------------------
+
+Step 1.7: Smoke test
+
+docker exec -i cass1 cqlsh <<'EOF'
+CREATE KEYSPACE smoke WITH replication = {'class': 'NetworkTopologyStrategy', 'dc1': 3};
+CREATE TABLE smoke.t (id int PRIMARY KEY, v text); 
+INSERT INTO smoke.t (id, v) VALUES (1, 'hello'); 
+EOF
+
+docker exec cass3 cqlsh -e "SELECT * FROM smoke.t;" 
+docker exec cass1 cqlsh -e "DROP KEYSPACE smoke;"
+
+
+$ docker exec -i cass1 cqlsh <<'EOF'
+> ^[[200~docker exec cass1 cqlsh -e "DROP KEYSPACE smoke;"
+> EOF
+<stdin>:2:Invalid syntax at line 1, char 1
+<stdin>:2:  docker exec cass1 cqlsh -e "DROP KEYSPACE smoke;"
+<stdin>:2:  ^
+
+---------------------------
+
+docker stats --no-stream cass1 cass2 cass3   
+    
+CONTAINER ID   NAME      CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O   PIDS
+80e01bc1d1e5   cass1     3.07%     957MiB / 1.172GiB     79.75%    6.41MB / 6.11MB   0B / 0B     93
+2e76ff3d979a   cass2     2.80%     970.9MiB / 1.172GiB   80.91%    5.59MB / 5.78MB   0B / 0B     106
+7ab3aa41bf78   cass3     2.59%     969.8MiB / 1.172GiB   80.82%    5.73MB / 5.84MB   0B / 0B     91
+
+docker system df
+
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          39        2         6.86GB    5.883GB (85%)
+Containers      4         3         10.46MB   0B (0%)
+Local Volumes   26        3         657.2MB   455.2MB (69%)
+Build Cache     163       0         612.7MB   612.7MB
+
+$ docker logs --tail 50 cass2 | grep -iE "error|exception" || echo "no errors found"
+no errors found
+
+-------------------------------
+
+Step 1.9: Create the reset script scripts/reset.sh
+
+in)
+$ bash scripts/reset.sh
+ Container cass3  Stopping
+ Container cass3  Stopped
+ Container cass3  Removing
+ Container cass3  Removed
+ Container cass2  Stopping
+ Container cass2  Stopped
+ Container cass2  Removing
+ Container cass2  Removed
+ Container cass1  Stopping
+ Container cass1  Stopped
+ Container cass1  Removing
+ Container cass1  Removed
+ Volume config_cass3_data  Removing
+ Volume config_cass1_data  Removing
+ Volume config_cass2_data  Removing
+ Network config_cassnet  Removing
+ Volume config_cass3_data  Removed
+ Volume config_cass1_data  Removed
+ Volume config_cass2_data  Removed
+ Network config_cassnet  Removed
+ Network config_cassnet  Creating
+ Network config_cassnet  Created
+ Volume "config_cass1_data"  Creating
+ Volume "config_cass1_data"  Created
+ Volume "config_cass2_data"  Creating
+ Volume "config_cass2_data"  Created
+ Volume "config_cass3_data"  Creating
+ Volume "config_cass3_data"  Created
+ Container cass1  Creating
+ Container cass1  Created
+ Container cass2  Creating
+ Container cass2  Created
+ Container cass3  Creating
+ Container cass3  Created
+ Container cass1  Starting
+ Container cass1  Started
+ Container cass1  Waiting
+ Container cass1  Healthy
+ Container cass2  Starting
+ Container cass2  Started
+ Container cass2  Waiting
+ Container cass2  Healthy
+ Container cass3  Starting
+ Container cass3  Started
+Cluster ready and schema loaded.
+
+$ docker exec -i cass1 cqlsh < scripts/seed_rf3.cql
+
+Consistency level set to LOCAL_QUORUM.
+
+------------------------------
+
+1.10: Practise stopping and restoring a node
+
+docker stop cass3 
+cass3
+
+sleep 30
+
+docker exec cass1 nodetool status
+Datacenter: dc1
+===============
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address     Load        Tokens  Owns (effective)  Host ID                               Rack
+UN  172.18.0.3  268.42 KiB  16      100.0%            842f7477-234e-41ac-8e3f-305a5f72bede  rack1
+DN  172.18.0.4  264.55 KiB  16      100.0%            0a3a33d3-2454-431e-8835-df1e09364ea8  rack1
+UN  172.18.0.2  238.64 KiB  16      100.0%            90e79206-1ddd-4217-bc5f-b4fbb43da191  rack1
+
+docker start cass3
+cass3
+
+docker exec cass1 nodetool status
+Datacenter: dc1
+===============
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address     Load        Tokens  Owns (effective)  Host ID                               Rack
+UN  172.18.0.3  268.42 KiB  16      100.0%            842f7477-234e-41ac-8e3f-305a5f72bede  rack1
+DN  172.18.0.4  264.55 KiB  16      100.0%            0a3a33d3-2454-431e-8835-df1e09364ea8  rack1
+UN  172.18.0.2  238.64 KiB  16      100.0%            90e79206-1ddd-4217-bc5f-b4fbb43da191  rack1

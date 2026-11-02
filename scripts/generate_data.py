@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
-"""Generate deterministic registration data for the Cassandra lab.""" 
 import datetime
 import pathlib
 
-EVENTS = {"E1": 30, "E2": 20, "E3": 15, "E4": 25, "E5": 10, "E6": 20}  # seats per event
+EVENTS = {"E1": 30, "E2": 20, "E3": 15, "E4": 25, "E5": 10, "E6": 20}
 BASE = datetime.datetime(2026, 11, 1, 9, 0, 0) 
 OUT = pathlib.Path("scripts")
 
