@@ -123,7 +123,8 @@ README.md               this file
 config/docker-compose.yml
 scripts/                schema, generator, seed files, CRUD, experiment scripts, reset
 evidence/               outputs + notes.md per experiment, screenshots, recording
-slides/                 Cassandra_Group_Presentation.pptx
+slides/                 Cassandra_Full_Presentation.pptx (all six parts, 27 slides)
+video/                  presentation recording(s)
 Documentations/         task guide and assignment notes
 ```
 
@@ -137,9 +138,9 @@ Documentations/         task guide and assignment notes
 
 | Member | What they did | Evidence |
 |---|---|---|
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| Ádám Guba | Environment: 3-node Docker Compose cluster (pinned 5.0.9 image, healthchecks, memory settings), version and image digest record, schema, first version of `reset.sh` and of the replication experiment (B). Part 1 introduction slides and recording | `config/docker-compose.yml`, `scripts/00_schema.cql`, `.env.example`, `evidence/00_environment/versions.txt`, slides 1–8 |
+| Sun Thong | Deterministic data generator and seed files; CRUD script (all steps including upsert) | `scripts/generate_data.py`, `scripts/seed_*.cql`, `scripts/crud.cql` |
+| Chen Yuqi | Completed `reset.sh` (data-deletion warning, wait loop, re-seeding); environment check script; experiments C (partitioning) and D (lightweight transactions); CRUD run results and ALLOW FILTERING evidence; `notes.md` for every experiment; screenshots; README; slides for Parts 2–6 | `scripts/reset.sh`, `scripts/env_check.sh`, `evidence/00_environment/`, `scripts/c_partitioning.sh`, `scripts/d_*.cql`, `scripts/d_lwt.sh`, `scripts/crud_run.sh`, `evidence/02_crud/`, `evidence/04_partitioning/`, `evidence/05_lwt/`, `evidence/*/notes.md`, `evidence/screenshots/`, `README.md`, `slides/Cassandra_Full_Presentation.pptx` (slides 9–27) |
 
 ## 9. Sources
 - Lakshman, A. & Malik, P. (2010). Cassandra: a decentralized structured storage system. *ACM SIGOPS OSR* 44(2).
